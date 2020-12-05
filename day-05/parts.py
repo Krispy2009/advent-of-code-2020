@@ -26,12 +26,23 @@ def read_input():
     return data
 
 
+def find_my_seat(seats):
+    for seat in range(seats[0], len(seats)):
+        if seat not in seats:
+            print(f"My seat: {seat}")
+
+
 if __name__ == "__main__":
     max_seat_id = 0
+    all_seat_ids = []
     data = read_input()
     for boarding_pass in data:
         row, column = parse_boarding_pass(boarding_pass)
         seat_id = (row * 8) + column
+        all_seat_ids.append(seat_id)
         if max_seat_id < seat_id:
             max_seat_id = seat_id
     print(f"Max SeatID: {max_seat_id}")
+
+    find_my_seat(sorted(all_seat_ids))
+
