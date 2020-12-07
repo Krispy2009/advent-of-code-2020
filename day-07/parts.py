@@ -67,6 +67,18 @@ def find_contents(bags, new_bags, data):
     return new_bags
 
 
+def count_contents(data):
+    checked_bags = ["shiny gold"]
+    for colour in checked_bags:
+        contents = data[colour]
+        for content in contents:
+            no_of_bags = int(content[0])
+            for _ in range(no_of_bags):
+                checked_bags.append(content[1])
+    print(len(checked_bags) - 1)
+
+
 if __name__ == "__main__":
     data = read_input("input.txt")
     count_bags(data)
+    count_contents(data)
