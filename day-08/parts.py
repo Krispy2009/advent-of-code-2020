@@ -11,22 +11,37 @@ def run_program(data):
     accumulator = 0
     visited_ops = []
     curr_register = 0
-    while True:
-        (op, arg, idx) = data[curr_register]
-        if idx in visited_ops:
-            print(f"Duplicate instruction detected! Accumulator: {accumulator}")
-            break
-        visited_ops.append(idx)
+    try:
+        while True:
+            (op, arg, idx) = data[curr_register]
+            if idx in visited_ops:
+                print(f"Duplicate instruction detected! Accumulator: {accumulator}")
+                return -1
+            visited_ops.append(idx)
+            if op == "nop":
+                curr_register += 1
+            elif op == "acc":
+                accumulator += arg
+                curr_register += 1
+            elif op == "jmp":
+                curr_register += arg
+    except IndexError:
+        print(f"TERMINATED wohoo! {accumulator}")
+        return 0
 
+
+def try_fixing_ops(data):
+    for (op, arg, idx) in data:
+        new_data = data[:]
         if op == "nop":
-            curr_register += 1
-        elif op == "acc":
-            accumulator += arg
-            curr_register += 1
+            new_data[idx] = ("jmp", arg, idx)
         elif op == "jmp":
-            curr_register += arg
+            new_data[idx] = ("nop", arg, idx)
+        res = run_program(new_data)
+        if not res:
+            break
 
 
 if __name__ == "__main__":
     data = read_input("input.txt")
-    run_program(data)
+    try_fixing_ops(data)
