@@ -62,7 +62,7 @@ def find_first_seat_x(x=None, y=None, step=None, data=None):
 
 
 def find_first_seat_y(x=None, y=None, step=None, data=None):
-    while y + step >= 0 and y + step < len(data):
+    while y + step >= 0 and y + step < len(data[0]):
         y = y + step
         if data[x][y] != ".":
             return y
@@ -73,11 +73,11 @@ def find_first_seat_x_y(x=None, y=None, step_x=None, step_y=None, data=None):
         if x + step_x >= 0 and x + step_x < len(data):
             x = x + step_x
         else:
-            return (None, None)
-        if y + step_y >= 0 and y + step_y < len(data):
+            return (None, y)
+        if y + step_y >= 0 and y + step_y < len(data[0]):
             y = y + step_y
         else:
-            return (None, None)
+            return (x, None)
 
         if data[x][y] != ".":
             return x, y
@@ -98,10 +98,6 @@ def check_seat_part2(data, x, y, seat_status):
         find_first_seat_x_y(x, y, 1, -1, data),
         find_first_seat_x_y(x, y, -1, 1, data),
     )
-    # if (x, y) == (1, 4):
-    #     import pdb
-
-    #     pdb.set_trace()
 
     for (a, b) in seats_around:
         if a is None or b is None or a < 0 or b < 0:
@@ -111,7 +107,6 @@ def check_seat_part2(data, x, y, seat_status):
                 seats_occupied += 1
         except IndexError:
             pass
-        # print(f"checking outside bounds {a,b}")
 
     if seat_status == "#" and seats_occupied >= 5:
         return "L"
