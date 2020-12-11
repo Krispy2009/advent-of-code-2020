@@ -16,7 +16,7 @@ def process_steps(data):
     print_layout(temp_step)
     for row_idx, row in enumerate(data):
         for seat_idx, seat in enumerate(row):
-            new_seat = check_seat(data, row_idx, seat_idx, seat)
+            new_seat = check_seat_part2(data, row_idx, seat_idx, seat)
             temp_step[row_idx][seat_idx] = new_seat
     return temp_step
 
@@ -47,6 +47,73 @@ def check_seat(data, x, y, seat_status):
         # print(f"checking outside bounds {a,b}")
 
     if seat_status == "#" and seats_occupied >= 4:
+        return "L"
+
+    elif seat_status == "L" and seats_occupied == 0:
+        return "#"
+    return seat_status
+
+
+def find_first_seat_x(x=None, y=None, step=None, data=None):
+    while x + step >= 0 and x + step < len(data):
+        x = x + step
+        if data[x][y] != ".":
+            return x
+
+
+def find_first_seat_y(x=None, y=None, step=None, data=None):
+    while y + step >= 0 and y + step < len(data):
+        y = y + step
+        if data[x][y] != ".":
+            return y
+
+
+def find_first_seat_x_y(x=None, y=None, step_x=None, step_y=None, data=None):
+    while x is not None or y is not None:
+        if x + step_x >= 0 and x + step_x < len(data):
+            x = x + step_x
+        else:
+            return (None, None)
+        if y + step_y >= 0 and y + step_y < len(data):
+            y = y + step_y
+        else:
+            return (None, None)
+
+        if data[x][y] != ".":
+            return x, y
+
+
+def check_seat_part2(data, x, y, seat_status):
+    seats_occupied = 0
+    if seat_status == ".":
+        return "."
+
+    seats_around = (
+        (find_first_seat_x(x, y, -1, data), y),
+        (find_first_seat_x(x, y, 1, data), y),
+        (x, find_first_seat_y(x, y, -1, data)),
+        (x, find_first_seat_y(x, y, 1, data)),
+        find_first_seat_x_y(x, y, -1, -1, data),
+        find_first_seat_x_y(x, y, 1, 1, data),
+        find_first_seat_x_y(x, y, 1, -1, data),
+        find_first_seat_x_y(x, y, -1, 1, data),
+    )
+    # if (x, y) == (1, 4):
+    #     import pdb
+
+    #     pdb.set_trace()
+
+    for (a, b) in seats_around:
+        if a is None or b is None or a < 0 or b < 0:
+            continue
+        try:
+            if data[a][b] == "#":
+                seats_occupied += 1
+        except IndexError:
+            pass
+        # print(f"checking outside bounds {a,b}")
+
+    if seat_status == "#" and seats_occupied >= 5:
         return "L"
 
     elif seat_status == "L" and seats_occupied == 0:
