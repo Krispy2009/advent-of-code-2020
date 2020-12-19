@@ -1,4 +1,5 @@
 import re
+from copy import deepcopy
 
 EXAMPLE = """
 0: 1 2
@@ -44,6 +45,12 @@ def find_ab(rules):
     return [a, b]
 
 
+def match_rules(p, rules_p):
+    R = re.compile(f"^{p}\D|\D{p}\D|\D{p}$")
+    print(f"{R} --->  {rules_p}")
+    return re.match(R, rules_p)
+
+
 def make_rules(rules_list):
     rules = {}
     for rule in rules_list:
@@ -53,6 +60,7 @@ def make_rules(rules_list):
             rules[id] = rest.replace(" ", "")
         else:
             rules[id] = rest
+    regex_rules = deepcopy(rules)
     print(rules)
     parsed = find_ab(rules)
     while not all_rules_parsed(rules):
@@ -60,21 +68,27 @@ def make_rules(rules_list):
         for idx, rule in rules.items():
             if idx not in parsed:
                 for p in parsed:
+                    # # if match_rules(p, rules[p]):
                     print(f"will replace rule {p} with {rules[p]} in rule {rules[idx]}")
-                    rule = rule.replace(f" {p}", rules[p])
+                    rule = rule.replace(f" {p}", regex_rules[p])
                     rules[idx] = rule
-                    print(rules)
-                    print(parsed)
                     if not re.search(regex, rule):
                         print(f"{rule} IS FULLY PARSED")
+                        regex_rules[idx] = f"({rule})"
                         parsed.append(idx)
                         break
-    return rules
+    print(regex_rules)
+    return f"^{regex_rules['0']}$"
 
 
 if __name__ == "__main__":
     rules_list, test_input = read_input("example.txt")
     print(rules_list)
     rules = make_rules(rules_list)
-    print(rules)
+    count = 0
+    for input in test_input:
+        if re.match(rules, input):
+            print(f"{input} matches!!")
+            count += 1
+    print(count)
 
