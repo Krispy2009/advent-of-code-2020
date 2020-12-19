@@ -47,8 +47,8 @@ def find_ab(rules):
 
 def match_rules(p, rules_p):
     R = re.compile(f"^{p}\D|\D{p}\D|\D{p}$")
-    print(f"{R} --->  {rules_p}")
-    return re.match(R, rules_p)
+    # print(f"{R} --->  {rules_p}")
+    return re.search(R, rules_p)
 
 
 def make_rules(rules_list):
@@ -67,22 +67,25 @@ def make_rules(rules_list):
         print("not all parsed!")
         for idx, rule in rules.items():
             if idx not in parsed:
+                print(len(rules.keys()), len(parsed))
+
                 for p in parsed:
-                    # # if match_rules(p, rules[p]):
-                    print(f"will replace rule {p} with {rules[p]} in rule {rules[idx]}")
-                    rule = rule.replace(f" {p}", regex_rules[p])
-                    rules[idx] = rule
-                    if not re.search(regex, rule):
-                        print(f"{rule} IS FULLY PARSED")
-                        regex_rules[idx] = f"({rule})"
-                        parsed.append(idx)
-                        break
+                    if match_rules(p, rules[idx]):
+                        print(f"will replace rule {p} with {regex_rules[p]} in rule {rules[idx]}")
+                        # rule = rule.replace(f" {p}", regex_rules[p])
+                        rule = re.sub(f"^ {p}(?=\D)| {p}(?=\D)| {p}$", regex_rules[p], rule)
+                        rules[idx] = rule
+                        if not re.search(regex, rule):
+                            print(f"{rule} IS FULLY PARSED")
+                            regex_rules[idx] = f"({rule})"
+                            parsed.append(idx)
+                            break
     print(regex_rules)
     return f"^{regex_rules['0']}$"
 
 
 if __name__ == "__main__":
-    rules_list, test_input = read_input("example.txt")
+    rules_list, test_input = read_input("input.txt")
     print(rules_list)
     rules = make_rules(rules_list)
     count = 0
