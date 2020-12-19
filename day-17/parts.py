@@ -7,7 +7,7 @@ def read_input(filename):
         for y, line in enumerate(f.read().splitlines()):
             for x, cube in enumerate(line):
                 if cube == "#":
-                    data.add((x, y, 0))
+                    data.add((x, y, 0, 0))
     return data
 
 
@@ -18,14 +18,17 @@ def process(activated):
             for ix in (-1, 0, 1):
                 for iy in (-1, 0, 1):
                     for iz in (-1, 0, 1):
-                        if ix == iy == iz == 0:
-                            continue
-                        # These have an active cube next to them so they **may** get activated
-                        # if the counts are following the rules
-                        active_counts[(cube[0] + ix, cube[1] + iy, cube[2] + iz)] += 1
+                        for iw in (-1, 0, 1):
+                            if ix == iy == iz == iw == 0:
+                                continue
+                            # These have an active cube next to them so they **may** get activated
+                            # if the counts are following the rules
+                            active_counts[
+                                (cube[0] + ix, cube[1] + iy, cube[2] + iz, cube[3] + iw)
+                            ] += 1
 
         new_activated = set()
-        print(active_counts)
+
         for cube in activated:
 
             # Currently activated cubes. Should they stay active?
@@ -38,7 +41,7 @@ def process(activated):
 
         activated = new_activated
 
-        print(f"Ans: {len(new_activated)}")
+    print(f"Ans: {len(activated)}")
 
 
 if __name__ == "__main__":
