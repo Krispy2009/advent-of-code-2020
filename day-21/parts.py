@@ -51,8 +51,13 @@ def count_non_allergens(all_foods):
     print(f"TOTAL: {total}")
 
 
+def generate_canonical_string():
+    print(",".join([v for k, v in sorted(CONFIRMED.items())]))
+
+
 if __name__ == "__main__":
     allergens, all_foods = read_input("input.txt")
     find_food_allergens(allergens)
     count_non_allergens(all_foods)
+    generate_canonical_string()
 
