@@ -31,16 +31,16 @@ def get_confirmed_allergen(allergen, foods):
 
 
 def find_food_allergens(allergens):
+    while len(allergens.keys()) != len(CONFIRMED.keys()):
+        for allergen, foods in allergens.items():
+            conf = get_confirmed_allergen(allergen, foods)
+            if len(conf) > 1:
+                # print(CONFIRMED.values())
+                conf = conf - set(CONFIRMED.values())
+                if len(conf) == 1:
+                    CONFIRMED[allergen] = conf.pop()
 
-    for allergen, foods in allergens.items():
-        conf = get_confirmed_allergen(allergen, foods)
-        if len(conf) > 1:
-            # print(CONFIRMED.values())
-            conf = conf - set(CONFIRMED.values())
-            if len(conf) == 1:
-                CONFIRMED[allergen] = conf.pop()
-
-    print(CONFIRMED)
+        print(CONFIRMED)
 
 
 def count_non_allergens(all_foods):
@@ -52,7 +52,7 @@ def count_non_allergens(all_foods):
 
 
 if __name__ == "__main__":
-    allergens, all_foods = read_input("example.txt")
+    allergens, all_foods = read_input("input.txt")
     find_food_allergens(allergens)
     count_non_allergens(all_foods)
 
