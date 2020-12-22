@@ -60,4 +60,3 @@ if __name__ == "__main__":
     find_food_allergens(allergens)
     count_non_allergens(all_foods)
     generate_canonical_string()
-
