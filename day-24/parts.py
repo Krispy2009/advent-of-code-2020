@@ -46,12 +46,56 @@ def find_black_tiles():
     for tile, count in TILE_COUNTS.items():
         if count % 2 != 0:
             black_tiles.add(tile)
-    print(f"There are {len(black_tiles)} black tiles")
+    print(f"Part 1: There are {len(black_tiles)} black tiles")
 
     return black_tiles
+
+
+def find_neighbours(tile):
+    neighbours = set()
+    for (x, y) in DIRECTIONS.values():
+        neighbours.add((tile[0] + x, tile[1] + y))
+    return neighbours
+
+
+def simulate(tiles, days):
+
+    for day in range(0, days + 1):
+        white_tiles = set()
+        black_tiles = tiles
+        for tile in tiles:
+            neighbours = find_neighbours(tile)
+            for neighbour in neighbours:
+                if neighbour not in black_tiles:
+                    white_tiles.add(neighbour)
+
+        to_white = set()
+        for tile in black_tiles:
+            neighbours = find_neighbours(tile)
+            n = 0
+            for ne in neighbours:
+                if ne in black_tiles:
+                    n += 1
+            if n == 0 or n > 2:
+                to_white.add(tile)
+
+        to_black = set()
+        for tile in white_tiles:
+            neighbours = find_neighbours(tile)
+            n = 0
+            for ne in neighbours:
+                if ne in black_tiles:
+                    n += 1
+            if n == 2:
+                to_black.add(tile)
+
+        tiles = black_tiles.difference(to_white).union(to_black)
+        if day == 100:
+            print(f"Part 2: Day {day}: {len(black_tiles)}")
 
 
 if __name__ == "__main__":
     instructions = read_input("input.txt")
     apply_instructions(instructions)
-    find_black_tiles()
+    black_tiles = find_black_tiles()
+    simulate(black_tiles, 100)
