@@ -42,11 +42,13 @@ def apply_instructions(instructions):
 
 
 def find_black_tiles():
-    black_tiles = 0
-    for count in TILE_COUNTS.values():
+    black_tiles = set()
+    for tile, count in TILE_COUNTS.items():
         if count % 2 != 0:
-            black_tiles += 1
-    print(f"There are {black_tiles} black tiles")
+            black_tiles.add(tile)
+    print(f"There are {len(black_tiles)} black tiles")
+
+    return black_tiles
 
 
 if __name__ == "__main__":
