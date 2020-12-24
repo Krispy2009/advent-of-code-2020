@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-DIRECTIONS = {"e": (0, 1), "se": (-1, 1), "sw": (-1, -1), "w": (0, -1), "nw": (1, -1), "ne": (1, 1)}
+DIRECTIONS = {"e": (1, 0), "se": (1, -1), "sw": (0, -1), "w": (-1, 0), "nw": (-1, 1), "ne": (0, 1)}
 
 TILE_COUNTS = defaultdict(int)
 
@@ -40,8 +40,6 @@ def apply_instructions(instructions):
             )
         TILE_COUNTS[tuple(ref_tile)] += 1
 
-    print(TILE_COUNTS)
-
 
 def find_black_tiles():
     black_tiles = 0
@@ -52,6 +50,6 @@ def find_black_tiles():
 
 
 if __name__ == "__main__":
-    instructions = read_input("example.txt")
+    instructions = read_input("input.txt")
     apply_instructions(instructions)
     find_black_tiles()
